@@ -29,13 +29,18 @@ buildscript {
   }
 }
 
+
+def safeExtGet(name, defaultValue = null) {
+    return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties[name] != null ? project.properties[name] : defaultValue)
+}
+
 android {
   namespace "com.ibits.react_native_in_app_review"
-  compileSdkVersion rootProject.ext.has('compileSdkVersion') ? rootProject.ext.get('compileSdkVersion') : 31
+  compileSdkVersion safeExtGet("compileSdkVersion", 31)
 
   defaultConfig {
-    minSdkVersion rootProject.ext.has('minSdkVersion') ? rootProject.ext.get('minSdkVersion') : 21
-    targetSdkVersion rootProject.ext.has('targetSdkVersion') ? rootProject.ext.get('targetSdkVersion') : 31
+    minSdkVersion safeExtGet("minSdkVersion", 21)
+    targetSdkVersion safeExtGet("targetSdkVersion", 31)
     versionCode 1
     versionName "1.0"
     // buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
@@ -67,6 +72,6 @@ android {
 dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation "com.google.android.play:review:${rootProject.ext.has('compileSdkVersion') ? rootProject.ext.get('compileSdkVersion') : 31}"
-    implementation "com.google.android.gms:play-services-base:${rootProject.ext.has('compileSdkVersion') ? rootProject.ext.get('compileSdkVersion') : 31}"
+    implementation "com.google.android.play:review:${safeExtGet('playReviewVersion')}"
+    implementation "com.google.android.gms:play-services-base:${safeExtGet('playServicesVersion')}"
 }
